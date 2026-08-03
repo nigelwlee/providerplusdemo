@@ -1,4 +1,7 @@
 import mammoth from "mammoth";
+// Must be imported before "pdf-parse" so its worker resolves correctly on
+// serverless platforms like Vercel (see pdf-parse's troubleshooting docs).
+import "pdf-parse/worker";
 import { PDFParse } from "pdf-parse";
 
 export const MAX_PAGES = 50;
