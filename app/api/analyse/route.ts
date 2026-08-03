@@ -33,6 +33,10 @@ export async function POST(request: Request) {
   const documentText = typeof body.documentText === "string" ? body.documentText : "";
   const selectedModules = Array.isArray(body.selectedModules) ? body.selectedModules : [];
   const pathway = isValidPathway(body.pathway) ? body.pathway : "certification";
+  // TEMPORARY diagnostic aid: only triggers on an explicit internal header,
+  // never sent by the app's own client, so end users never see raw error
+  // detail. Remove once the current production failure is root-caused.
+  const wantsDebugDetail = request.headers.get("x-debug-detail") === "1";
 
   const encoder = new TextEncoder();
 
@@ -49,14 +53,26 @@ export async function POST(request: Request) {
         send({ type: "done", report });
       } catch (error) {
         if (error instanceof AnalysisError) {
-          send({ type: "error", message: error.message, status: 400 });
+          send({
+            type: "error",
+            message: error.message,
+            status: 400,
+            ...(wantsDebugDetail ? { debugDetail: error.debugDetail } : {}),
+          });
         } else {
           console.error("Analysis failed:", error);
           const message =
             error instanceof Error && error.message.includes("OPENROUTER_API_KEY")
               ? error.message
               : "The analysis failed unexpectedly. Please try again in a moment.";
-          send({ type: "error", message, status: 502 });
+          send({
+            type: "error",
+            message,
+            status: 502,
+            ...(wantsDebugDetail && error instanceof Error
+              ? { debugDetail: { name: error.name, message: error.message } }
+              : {}),
+          });
         }
       } finally {
         controller.close();

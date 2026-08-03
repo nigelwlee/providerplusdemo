@@ -16,7 +16,10 @@ import type {
   StandardStatus,
 } from "./types";
 
-export class AnalysisError extends Error {}
+export class AnalysisError extends Error {
+  /** Raw underlying error detail (message/status/code), for diagnostics only — never shown to end users, only surfaced via an internal debug header. */
+  debugDetail?: unknown;
+}
 
 const CHUNK_SIZE = 40_000;
 
@@ -166,10 +169,13 @@ async function callWithOneRetry<T>(params: {
         `${user}\n\nYour previous response was not valid JSON matching the required schema, or was missing required entries. Return ONLY the JSON object — no markdown code fences, no commentary before or after.`
       );
     } catch (err2) {
-      console.error(`[analyse] ${debugLabel} retry attempt failed:`, describeError(err2));
-      throw new AnalysisError(
+      const detail = describeError(err2);
+      console.error(`[analyse] ${debugLabel} retry attempt failed:`, detail);
+      const analysisError = new AnalysisError(
         "The analysis engine returned an unexpected or incomplete response. Please try again — if this keeps happening, try a shorter document."
       );
+      analysisError.debugDetail = { debugLabel, firstAttempt: describeError(err), retryAttempt: detail };
+      throw analysisError;
     }
   }
 }
