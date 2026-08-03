@@ -11,15 +11,17 @@ export function getLlmClient(): OpenAI {
       "OPENROUTER_API_KEY is not set. Add it to your .env.local file (see .env.example)."
     );
   }
-  // A key with embedded whitespace/newlines (e.g. pasted twice into a
-  // deployment platform's env var field) fails deep inside the HTTP client
+  // A leading/trailing newline is a common, harmless copy-paste artifact
+  // (many terminals/editors append one) — trim it silently. But *internal*
+  // whitespace (e.g. the key pasted twice with a newline in between) means
+  // the value is genuinely corrupted, and fails deep inside the HTTP client
   // with an opaque "Headers.append: invalid header value" error that gives
-  // no hint it's a config problem — catch it here with a clear message
-  // instead. This exact failure mode has happened in production.
+  // no hint it's a config problem — catch that case here with a clear
+  // message instead. This exact failure mode has happened in production.
   const apiKey = rawKey.trim();
-  if (apiKey !== rawKey || /\s/.test(apiKey)) {
+  if (/\s/.test(apiKey)) {
     throw new Error(
-      "OPENROUTER_API_KEY contains unexpected whitespace or a newline — check the value in your deployment platform's environment variable settings for accidental duplication or a trailing newline."
+      "OPENROUTER_API_KEY contains unexpected internal whitespace or a newline — check the value in your deployment platform's environment variable settings for accidental duplication."
     );
   }
   if (!client) {
