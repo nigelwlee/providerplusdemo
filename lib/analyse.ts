@@ -129,7 +129,14 @@ function parseSummaryResponse(raw: string): AnalysisSummary {
   return validateSummary(JSON.parse(extractJson(raw)));
 }
 
-/** Retries once with a corrective instruction on any parse/validation failure, mirroring the same tolerance the original single-call implementation had — just now scoped to one small batch (or the synthesis call) instead of the whole 31-standard analysis, so a retry costs seconds, not minutes. */
+/**
+ * Retries once on ANY failure — a network/API-level error from callClaude
+ * itself (rate limit, transient 5xx, timeout) just as much as a parse/
+ * validation failure. With 12 concurrent requests per analysis and the SDK's
+ * own retries disabled (see lib/llm.ts), a single transient hiccup on any one
+ * of them must not be allowed to fail the whole thing outright — Promise.all
+ * fails fast on the first rejection, so this is the only safety net.
+ */
 async function callWithOneRetry<T>(params: {
   system: string;
   user: string;
@@ -140,26 +147,24 @@ async function callWithOneRetry<T>(params: {
 }): Promise<T> {
   const { system, user, maxTokens, jsonMode, parse, debugLabel } = params;
 
-  let raw = await callClaude({ system, user, maxTokens, jsonMode });
-  try {
+  async function attempt(promptUser: string): Promise<T> {
+    const raw = await callClaude({ system, user: promptUser, maxTokens, jsonMode });
     return parse(raw);
+  }
+
+  try {
+    return await attempt(user);
   } catch (err) {
     if (process.env.LLM_DEBUG) {
-      console.error(`[analyse debug] ${debugLabel} first parse failed:`, err);
-      console.error(`[analyse debug] ${debugLabel} raw length:`, raw.length, "tail:", raw.slice(-300));
+      console.error(`[analyse debug] ${debugLabel} first attempt failed:`, err);
     }
-    raw = await callClaude({
-      system,
-      user: `${user}\n\nYour previous response was not valid JSON matching the required schema, or was missing required entries. Return ONLY the JSON object — no markdown code fences, no commentary before or after.`,
-      maxTokens,
-      jsonMode,
-    });
     try {
-      return parse(raw);
+      return await attempt(
+        `${user}\n\nYour previous response was not valid JSON matching the required schema, or was missing required entries. Return ONLY the JSON object — no markdown code fences, no commentary before or after.`
+      );
     } catch (err2) {
       if (process.env.LLM_DEBUG) {
-        console.error(`[analyse debug] ${debugLabel} retry parse failed:`, err2);
-        console.error(`[analyse debug] ${debugLabel} raw length:`, raw.length, "tail:", raw.slice(-300));
+        console.error(`[analyse debug] ${debugLabel} retry attempt failed:`, err2);
       }
       throw new AnalysisError(
         "The analysis engine returned an unexpected or incomplete response. Please try again — if this keeps happening, try a shorter document."
