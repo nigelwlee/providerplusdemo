@@ -155,22 +155,37 @@ async function callWithOneRetry<T>(params: {
   try {
     return await attempt(user);
   } catch (err) {
-    if (process.env.LLM_DEBUG) {
-      console.error(`[analyse debug] ${debugLabel} first attempt failed:`, err);
-    }
+    // Always log (not gated behind LLM_DEBUG) — this is a failure path, not
+    // verbose success-path noise, and it's the only place the real
+    // underlying error (network/API vs. parse/validation) is visible before
+    // it gets replaced by the generic AnalysisError message below. Without
+    // this, a production failure is undiagnosable from Vercel's logs.
+    console.error(`[analyse] ${debugLabel} first attempt failed:`, describeError(err));
     try {
       return await attempt(
         `${user}\n\nYour previous response was not valid JSON matching the required schema, or was missing required entries. Return ONLY the JSON object — no markdown code fences, no commentary before or after.`
       );
     } catch (err2) {
-      if (process.env.LLM_DEBUG) {
-        console.error(`[analyse debug] ${debugLabel} retry attempt failed:`, err2);
-      }
+      console.error(`[analyse] ${debugLabel} retry attempt failed:`, describeError(err2));
       throw new AnalysisError(
         "The analysis engine returned an unexpected or incomplete response. Please try again — if this keeps happening, try a shorter document."
       );
     }
   }
+}
+
+/** Surfaces enough detail to tell an API-level failure (status/code from the OpenAI SDK) apart from a parse/validation failure, without dumping a full stack trace into the logs on every retry. */
+function describeError(err: unknown): unknown {
+  if (err instanceof Error) {
+    const withStatus = err as Error & { status?: number; code?: string };
+    return {
+      name: err.name,
+      message: err.message,
+      status: withStatus.status,
+      code: withStatus.code,
+    };
+  }
+  return err;
 }
 
 async function condenseDocument(text: string): Promise<string> {

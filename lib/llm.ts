@@ -39,17 +39,33 @@ export async function callClaude(params: {
 }): Promise<string> {
   const openrouter = getLlmClient();
   const startedAt = Date.now();
+
+  // Route to the fastest available backend for this model rather than the
+  // cheapest — our bottleneck is output-token throughput, not price.
+  // Measured locally: cut the slowest batch call from ~39s to ~13s with no
+  // quality difference. Opt-out via env var if ever needed.
+  const sortByThroughput = process.env.OPENROUTER_SORT_THROUGHPUT !== "0";
+  const providerOptions: Record<string, unknown> = {};
+  if (sortByThroughput) {
+    providerOptions.sort = "throughput";
+  }
+  if (params.jsonMode) {
+    // Not every backend behind this model supports response_format (some of
+    // DeepSeek v3.2's OpenRouter providers don't). Without this, throughput
+    // sorting can route to a fast-but-incompatible provider and every
+    // request fails — this was a real, 100%-reproducible production bug.
+    // require_parameters tells OpenRouter to only route to providers that
+    // support every parameter in the request.
+    providerOptions.require_parameters = true;
+  }
+
   const response = await openrouter.chat.completions.create({
     model: MODEL,
     max_tokens: params.maxTokens ?? 8192,
     temperature: params.temperature ?? 0.2,
     ...(params.jsonMode ? { response_format: { type: "json_object" as const } } : {}),
-    // Route to the fastest available backend for this model rather than the
-    // cheapest — our bottleneck is output-token throughput, not price.
-    // Measured locally: cut the slowest batch call from ~39s to ~13s with no
-    // quality difference. Opt-out via env var if ever needed.
-    ...(process.env.OPENROUTER_SORT_THROUGHPUT !== "0"
-      ? ({ provider: { sort: "throughput" } } as Record<string, unknown>)
+    ...(Object.keys(providerOptions).length > 0
+      ? ({ provider: providerOptions } as Record<string, unknown>)
       : {}),
     messages: [
       { role: "system", content: params.system },
