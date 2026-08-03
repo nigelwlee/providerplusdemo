@@ -1,0 +1,448 @@
+{
+  "disclaimer": "This is a condensed dataset built for demonstration purposes only. Standard names and quality indicators are paraphrased from publicly available NDIS Quality and Safeguards Commission material and are not a verbatim reproduction of the NDIS (Provider Registration and Practice Standards) Rules 2018. Providers must refer to the current NDIS Practice Standards and Quality Indicators published by the NDIS Commission for compliance and audit purposes.",
+  "modules": [
+    {
+      "moduleId": "core",
+      "moduleName": "Core Module",
+      "shortName": "Core",
+      "appliesTo": "All registered NDIS providers, regardless of registration group.",
+      "divisions": [
+        {
+          "divisionId": "core-div1",
+          "divisionName": "Rights and Responsibilities of Participants",
+          "standards": [
+            {
+              "standardId": "core-1.1",
+              "standardName": "Person-Centred Supports",
+              "summary": "Supports are tailored to each participant's needs, goals and preferences, and delivered in a way that respects their culture, identity and decisions.",
+              "qualityIndicators": [
+                "Supports are individualised to the participant's needs, goals, preferences and strengths as set out in their plan.",
+                "The provider actively involves the participant (and their support network, where wanted) in decisions about how supports are delivered.",
+                "Supports are adapted where a participant's needs, goals or circumstances change."
+              ]
+            },
+            {
+              "standardId": "core-1.2",
+              "standardName": "Privacy and Dignity",
+              "summary": "Participants' privacy is protected and their personal information is handled confidentially and respectfully.",
+              "qualityIndicators": [
+                "Personal and health information is collected, stored and shared only as needed and with participant consent.",
+                "Staff are trained on confidentiality obligations and privacy is maintained during support delivery, including in shared or home settings.",
+                "Participants are treated with dignity and respect in all interactions."
+              ]
+            },
+            {
+              "standardId": "core-1.3",
+              "standardName": "Independence and Informed Choice",
+              "summary": "Participants are supported to make their own decisions, exercise choice and control, and build independence.",
+              "qualityIndicators": [
+                "Participants are given information in an accessible format to make informed decisions about their supports.",
+                "Decision-making support (including supported decision-making) is provided in a way that respects the participant's right to choice and control.",
+                "The provider does not make decisions on behalf of a participant unless formally authorised to do so."
+              ]
+            },
+            {
+              "standardId": "core-1.4",
+              "standardName": "Violence, Abuse, Neglect, Exploitation and Discrimination",
+              "summary": "Participants are protected from violence, abuse, neglect, exploitation and discrimination, and the provider has clear safeguarding processes.",
+              "qualityIndicators": [
+                "The provider has a documented safeguarding policy addressing prevention, identification and response to violence, abuse, neglect, exploitation and discrimination.",
+                "Staff understand their obligations to report harm or suspected harm, including reportable incidents to the NDIS Commission.",
+                "Screening and induction processes reduce the risk of unsuitable people working with participants.",
+                "Restrictive practices, where used, are authorised, minimised and regularly reviewed."
+              ]
+            }
+          ]
+        },
+        {
+          "divisionId": "core-div2",
+          "divisionName": "Governance and Operational Management",
+          "standards": [
+            {
+              "standardId": "core-2.1",
+              "standardName": "Governance and Operational Management",
+              "summary": "The provider has sound governance arrangements, clear accountability, and key personnel who are suitable to hold their roles.",
+              "qualityIndicators": [
+                "The governing body has oversight of service delivery, risk and compliance obligations.",
+                "Key personnel are identified, suitable, and understand their responsibilities under the NDIS Code of Conduct.",
+                "Organisational structure and lines of accountability are documented and understood by staff."
+              ]
+            },
+            {
+              "standardId": "core-2.2",
+              "standardName": "Risk Management",
+              "summary": "Risks to participants and the business are systematically identified, assessed and managed.",
+              "qualityIndicators": [
+                "A risk management framework or policy identifies operational, WHS and participant-related risks.",
+                "Risk assessed roles are identified and appropriate screening/qualification checks are applied to staff in those roles.",
+                "Risks are reviewed regularly and after incidents, and mitigation actions are tracked to completion."
+              ]
+            },
+            {
+              "standardId": "core-2.3",
+              "standardName": "Quality Management",
+              "summary": "The provider has a system for monitoring, reviewing and continuously improving the quality of supports.",
+              "qualityIndicators": [
+                "A continuous improvement or quality management system captures issues and drives corrective action.",
+                "Internal audits, self-assessments or file reviews are conducted periodically.",
+                "Outcomes of quality reviews are documented and inform policy and practice updates."
+              ]
+            },
+            {
+              "standardId": "core-2.4",
+              "standardName": "Information Management",
+              "summary": "Participant and organisational records are accurate, secure, and retained appropriately.",
+              "qualityIndicators": [
+                "Records are complete, accurate, and stored securely with appropriate access controls.",
+                "Retention and disposal of records complies with relevant legislation.",
+                "Participants can access their own records on request, in line with privacy obligations."
+              ]
+            },
+            {
+              "standardId": "core-2.5",
+              "standardName": "Feedback and Complaints Management",
+              "summary": "Participants can raise feedback or complaints easily, and complaints are handled fairly and used to improve services.",
+              "qualityIndicators": [
+                "A documented, accessible complaints process is available to participants and their support network.",
+                "Complaints are acknowledged, investigated and resolved within a reasonable timeframe, without fear of reprisal.",
+                "Trends in feedback and complaints are reviewed and feed into continuous improvement."
+              ]
+            },
+            {
+              "standardId": "core-2.6",
+              "standardName": "Incident Management",
+              "summary": "Incidents, including reportable incidents, are identified, responded to, recorded and reported in line with NDIS Commission requirements.",
+              "qualityIndicators": [
+                "A documented incident management policy defines what must be recorded and what is reportable to the NDIS Commission.",
+                "Staff know how to respond to and escalate an incident, including timeframes for reportable incidents (24 hours / 5 days as applicable).",
+                "Incidents are reviewed for root cause and preventive action, and trends are monitored over time."
+              ]
+            },
+            {
+              "standardId": "core-2.7",
+              "standardName": "Human Resource Management",
+              "summary": "The provider has a competent, appropriately screened and supervised workforce.",
+              "qualityIndicators": [
+                "Recruitment, induction and screening (including NDIS Worker Screening Check where required) are documented and applied consistently.",
+                "Staff receive training relevant to their role, including NDIS Code of Conduct and Worker Orientation Module completion.",
+                "Supervision and performance management processes are in place, particularly for risk assessed roles."
+              ]
+            },
+            {
+              "standardId": "core-2.8",
+              "standardName": "Continuity of Supports",
+              "summary": "The provider plans for events that could disrupt supports and minimises the impact on participants.",
+              "qualityIndicators": [
+                "A continuity of supports plan addresses foreseeable disruptions (e.g. staff shortages, provider closure, natural disasters).",
+                "Participants are informed in advance where a planned disruption to their supports will occur, where possible.",
+                "Financial and operational viability is monitored to reduce the risk of unplanned service withdrawal."
+              ]
+            },
+            {
+              "standardId": "core-2.9",
+              "standardName": "Emergency and Disaster Management",
+              "summary": "The provider is prepared to keep participants safe during emergencies and disasters.",
+              "qualityIndicators": [
+                "An emergency and disaster management plan covers relevant scenarios (fire, flood, extreme weather, pandemic, utility failure).",
+                "Participant-specific emergency and evacuation needs are documented and reviewed.",
+                "Staff are trained in emergency procedures relevant to the settings they work in."
+              ]
+            }
+          ]
+        },
+        {
+          "divisionId": "core-div3",
+          "divisionName": "Provision of Supports",
+          "standards": [
+            {
+              "standardId": "core-3.1",
+              "standardName": "Access to Supports",
+              "summary": "Access to supports is transparent, fair, and based on participant need.",
+              "qualityIndicators": [
+                "Eligibility and intake processes are transparent and applied consistently.",
+                "Waitlists or capacity constraints are communicated clearly to prospective participants.",
+                "The provider does not discriminate in deciding who it will support."
+              ]
+            },
+            {
+              "standardId": "core-3.2",
+              "standardName": "Support Planning",
+              "summary": "Supports are planned collaboratively with the participant and reflect their goals, needs and preferences.",
+              "qualityIndicators": [
+                "Individual support plans are developed with the participant and reviewed regularly.",
+                "Plans reflect participant goals from their NDIS plan, not just funded support categories.",
+                "Support plans are accessible to relevant staff and updated when circumstances change."
+              ]
+            },
+            {
+              "standardId": "core-3.3",
+              "standardName": "Service Agreements",
+              "summary": "Service agreements clearly set out what the provider and participant have agreed to.",
+              "qualityIndicators": [
+                "Service agreements are in place (or offered) and set out supports, costs, and cancellation/termination terms in plain English.",
+                "Participants are given a reasonable opportunity to review and ask questions about the agreement before signing.",
+                "Changes to service agreements are documented and agreed by both parties."
+              ]
+            },
+            {
+              "standardId": "core-3.4",
+              "standardName": "Responsive Support Provision",
+              "summary": "Supports respond to the participant's changing needs, including at times of increased vulnerability.",
+              "qualityIndicators": [
+                "Staff monitor and respond to changes in a participant's health, wellbeing or circumstances.",
+                "Escalation pathways exist for urgent or higher-risk situations.",
+                "Support delivery adapts to changing needs without unnecessary delay or re-negotiation friction."
+              ]
+            },
+            {
+              "standardId": "core-3.5",
+              "standardName": "Transitions",
+              "summary": "Participants are supported through transitions into, between, or out of a provider's services.",
+              "qualityIndicators": [
+                "Transition planning occurs when a participant starts, changes or ends supports with the provider.",
+                "Relevant information is shared (with consent) to support continuity when a participant moves to another provider.",
+                "Participants are given reasonable notice before a service ends, other than in urgent safety situations."
+              ]
+            }
+          ]
+        },
+        {
+          "divisionId": "core-div4",
+          "divisionName": "Support Provision Environment",
+          "standards": [
+            {
+              "standardId": "core-4.1",
+              "standardName": "Safe Environment",
+              "summary": "The physical environment in which supports are delivered is safe and fit for purpose.",
+              "qualityIndicators": [
+                "Premises and equipment used to deliver supports are maintained and meet relevant safety standards.",
+                "Hazards are identified and managed, including through routine WHS inspections.",
+                "Infection control and hygiene practices are documented and followed."
+              ]
+            },
+            {
+              "standardId": "core-4.2",
+              "standardName": "Participant Money and Property",
+              "summary": "Participants' money and property are protected and only handled with appropriate authority and record-keeping.",
+              "qualityIndicators": [
+                "Clear policy governs if/when staff may handle a participant's money or property, requiring documented consent.",
+                "Transactions involving participant funds are recorded and reconcilable.",
+                "Participant belongings are treated with respect and not used, moved or disposed of without consent."
+              ]
+            },
+            {
+              "standardId": "core-4.3",
+              "standardName": "Management of Medication",
+              "summary": "Medication is administered, stored and managed safely where the provider has a role in medication support.",
+              "qualityIndicators": [
+                "A medication management policy covers administration, storage, disposal and error reporting.",
+                "Staff administering or assisting with medication are trained and assessed as competent.",
+                "Medication incidents (errors, near misses) are recorded, reported where reportable, and reviewed."
+              ]
+            },
+            {
+              "standardId": "core-4.4",
+              "standardName": "Mealtime Management",
+              "summary": "Food and mealtime support is provided safely, including for participants with swallowing or dietary risk.",
+              "qualityIndicators": [
+                "Participants with mealtime management risks (e.g. dysphagia) have documented mealtime/dietary plans, informed by relevant specialists.",
+                "Staff supporting mealtimes are trained in relevant mealtime management plans and choking-response procedures.",
+                "Food handling and preparation meets basic food safety requirements."
+              ]
+            },
+            {
+              "standardId": "core-4.5",
+              "standardName": "Waste Management",
+              "summary": "Waste, including clinical and hazardous waste, is managed safely.",
+              "qualityIndicators": [
+                "Waste (including any clinical waste, e.g. sharps) is disposed of in line with relevant regulations.",
+                "Staff are aware of correct waste handling procedures relevant to the setting."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "5a",
+      "moduleName": "Module 5A — Supported Independent Living (SIL)",
+      "shortName": "Module 5A (SIL)",
+      "registrationGroup": "0138",
+      "formerRegistrationGroup": "0115",
+      "appliesTo": "Providers delivering Supported Independent Living (SIL) supports. Mandatory registration under Registration Group 0138 applies from 1 July 2026, with a transition deadline of 1 October 2026 for providers previously delivering SIL unregistered.",
+      "note": "SIL-specific standards are additional to, and build on, the Core Module — particularly Rights and Responsibilities, Governance, Human Resource Management, and Safe Environment. Structure paraphrased from published NDIS Commission material on the new SIL Practice Standards; verify exact wording against the current NDIS Commission publication before relying on this for compliance advice.",
+      "divisions": [
+        {
+          "divisionId": "5a-div1",
+          "divisionName": "Supported Independent Living Practice Standards",
+          "standards": [
+            {
+              "standardId": "5a-1",
+              "standardName": "SIL Governance and Oversight",
+              "summary": "The provider has governance arrangements specific to overseeing SIL settings, including regular oversight of each dwelling.",
+              "qualityIndicators": [
+                "Governance arrangements identify who is accountable for the quality and safety of supports in each SIL dwelling.",
+                "Regular management oversight visits or reviews of each SIL home are documented, not just relied on from front-line staff reporting.",
+                "Governance processes escalate emerging issues (e.g. repeated incidents at one dwelling) to senior management promptly."
+              ]
+            },
+            {
+              "standardId": "5a-2",
+              "standardName": "Safeguarding and Restrictive Practices in Shared Living",
+              "summary": "Participants living together are protected from harm from co-residents or staff, and any restrictive practices are authorised, minimised and reviewed.",
+              "qualityIndicators": [
+                "A documented restrictive practices policy specific to the shared-living context covers authorisation, use, recording and reduction of restrictive practices.",
+                "Behaviour support plans (where applicable) are followed consistently by all staff across all shifts in the home.",
+                "Risks between co-residents (e.g. compatibility, conflict) are actively assessed and managed, not left to chance."
+              ]
+            },
+            {
+              "standardId": "5a-3",
+              "standardName": "Workforce and Roster Governance",
+              "summary": "Staffing levels, rostering and workforce continuity in SIL homes are actively managed to keep participants safe.",
+              "qualityIndicators": [
+                "Rosters reflect participants' assessed support needs (including overnight and high-intensity needs) rather than staff availability alone.",
+                "A documented process covers shift handover, so incoming staff know each participant's current needs, risks and behaviour support requirements.",
+                "Use of casual, agency or unfamiliar staff in a home is monitored and minimised where it affects support quality or safety."
+              ]
+            },
+            {
+              "standardId": "5a-4",
+              "standardName": "Participant Choice and Control in the Home",
+              "summary": "Participants retain choice and control over their own home and daily life, distinct from decisions about the support they receive.",
+              "qualityIndicators": [
+                "Participants are supported to make decisions about their home (e.g. daily routine, visitors, meals) independent of rostering or staffing convenience.",
+                "House rules, if any, are developed with participant input and do not unreasonably restrict participants' rights.",
+                "Participants are supported to exercise choice of provider and are not pressured to accept SIL and tenancy from the same organisation."
+              ]
+            },
+            {
+              "standardId": "5a-5",
+              "standardName": "Conflict of Interest — Housing and Support Separation",
+              "summary": "Where the provider (or a related party) is also the landlord or accommodation provider, conflicts of interest between the housing and support roles are identified and managed.",
+              "qualityIndicators": [
+                "A documented conflict-of-interest policy addresses situations where the SIL provider is related to the Specialist Disability Accommodation (SDA) provider or landlord.",
+                "Participants are made aware, in plain English, of any relationship between their support provider and their housing/tenancy provider.",
+                "Decisions about a participant's support are demonstrably separate from, and not influenced by, tenancy or accommodation considerations."
+              ]
+            },
+            {
+              "standardId": "5a-6",
+              "standardName": "Medication Management in SIL",
+              "summary": "Medication support in a shared home is safe, consistent across shifts, and clearly documented per participant.",
+              "qualityIndicators": [
+                "Each participant has an individual, current medication management plan accessible to all rostered staff.",
+                "Medication administration records are maintained per participant per dose, with a documented process for errors or missed doses.",
+                "Medication is stored securely and appropriately for each participant in the shared home, preventing mix-ups between residents."
+              ]
+            },
+            {
+              "standardId": "5a-7",
+              "standardName": "Mealtime Management in SIL",
+              "summary": "Mealtime support in a shared home accounts for each participant's individual risk, preferences and choice.",
+              "qualityIndicators": [
+                "Participants with mealtime risk have individual mealtime management plans followed consistently across the household.",
+                "Menu and meal planning balances participant choice and control with any documented dietary or swallowing risk.",
+                "Staff supporting mealtimes in the home are trained in choking-response and any participant-specific mealtime plans."
+              ]
+            },
+            {
+              "standardId": "5a-8",
+              "standardName": "Emergency and Disaster Preparedness per Dwelling",
+              "summary": "Each SIL dwelling has its own emergency and evacuation arrangements suited to the participants living there.",
+              "qualityIndicators": [
+                "A site-specific emergency and evacuation plan exists for each dwelling, reflecting the mobility, communication and support needs of current residents.",
+                "Emergency plans are reviewed when a new participant moves in or a resident's needs change.",
+                "Staff and, where appropriate, participants have practised emergency procedures relevant to that specific home."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "moduleId": "module-1",
+      "moduleName": "Module 1 — High Intensity Daily Personal Activities",
+      "shortName": "Module 1",
+      "appliesTo": "Providers delivering high intensity daily personal activities (e.g. complex bowel care, enteral feeding, tracheostomy management, ventilator support, subcutaneous injections, complex wound care).",
+      "structureOnly": true,
+      "topLevelStandards": [
+        "Provision of high intensity daily personal activities is delegated, planned and monitored by an appropriately qualified health professional",
+        "Staff delivering high intensity supports are assessed as competent for each specific task and participant",
+        "High intensity support risks are documented in an individualised support plan and reviewed regularly"
+      ]
+    },
+    {
+      "moduleId": "module-2",
+      "moduleName": "Module 2 — Specialist Behaviour Support",
+      "shortName": "Module 2",
+      "appliesTo": "Providers employing or engaging NDIS Behaviour Support Practitioners to develop behaviour support plans, including plans involving restrictive practices.",
+      "structureOnly": true,
+      "topLevelStandards": [
+        "Behaviour support assessments and plans are developed by a suitably qualified behaviour support practitioner",
+        "Behaviour support plans identify and prioritise the reduction and elimination of restrictive practices",
+        "Practitioners collaborate with the participant, their support network and implementing providers"
+      ]
+    },
+    {
+      "moduleId": "module-2a",
+      "moduleName": "Module 2A — Implementing Behaviour Support Plans",
+      "shortName": "Module 2A",
+      "appliesTo": "Providers who implement behaviour support plans developed by others, including any use of restrictive practices.",
+      "structureOnly": true,
+      "topLevelStandards": [
+        "Behaviour support plans are implemented consistently by trained staff",
+        "Use of restrictive practices is authorised, recorded, and reported in line with state/territory and NDIS Commission requirements",
+        "Regular data collection supports monitoring and reduction of restrictive practice use"
+      ]
+    },
+    {
+      "moduleId": "module-3",
+      "moduleName": "Module 3 — Early Childhood Supports",
+      "shortName": "Module 3",
+      "appliesTo": "Providers delivering supports to children younger than 7 and their families under the early childhood approach.",
+      "structureOnly": true,
+      "topLevelStandards": [
+        "Supports are family-centred and build the capacity of the child's family and carers",
+        "Practice is informed by contemporary evidence-based early childhood intervention approaches",
+        "Transition planning supports the child's move into the next stage (e.g. school, mainstream services)"
+      ]
+    },
+    {
+      "moduleId": "module-4",
+      "moduleName": "Module 4 — Specialised Support Coordination",
+      "shortName": "Module 4",
+      "appliesTo": "Providers delivering specialist support coordination to participants with complex needs or circumstances.",
+      "structureOnly": true,
+      "topLevelStandards": [
+        "Support coordinators hold relevant qualifications and experience for complex support coordination",
+        "Support coordination is free from conflicts of interest, or conflicts are transparently managed and disclosed",
+        "Support coordination builds the participant's capacity to exercise choice and control over time"
+      ]
+    },
+    {
+      "moduleId": "module-5",
+      "moduleName": "Module 5 — Specialist Disability Accommodation (SDA)",
+      "shortName": "Module 5",
+      "appliesTo": "Providers delivering or managing Specialist Disability Accommodation dwellings.",
+      "structureOnly": true,
+      "topLevelStandards": [
+        "SDA dwellings meet the design category and enrolment requirements claimed",
+        "Tenancy and accommodation arrangements are kept separate from support provision decisions",
+        "Dwellings are maintained to meet ongoing safety and accessibility requirements"
+      ]
+    },
+    {
+      "moduleId": "verification",
+      "moduleName": "Verification Module",
+      "shortName": "Verification",
+      "appliesTo": "Providers delivering lower risk-and-complexity supports, assessed via desktop verification rather than an on-site certification audit.",
+      "structureOnly": true,
+      "topLevelStandards": [
+        "The provider meets the applicable Core Module governance and operational requirements",
+        "Evidence of suitability (e.g. insurance, key personnel checks, policies) is provided and verified without an on-site audit",
+        "The provider's risk profile is consistent with the lower-risk supports it is registered to deliver"
+      ]
+    }
+  ]
+}

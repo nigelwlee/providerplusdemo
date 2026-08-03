@@ -1,0 +1,248 @@
+HARBOUR CARE SERVICES PTY LTD
+Policy & Procedure Manual — Supported Independent Living (SIL)
+ABN 45 123 456 789 | Sydney, NSW
+
+Document Status: Current
+Prepared for: Transition from Registration Group 0115 to Registration Group 0138 (Module 5A)
+Prepared for upcoming certification audit
+
+===================================================================
+SECTION 1: ABOUT HARBOUR CARE SERVICES
+===================================================================
+
+Harbour Care Services Pty Ltd ("Harbour Care", "the organisation") has
+provided Supported Independent Living (SIL) supports to NDIS participants
+across the Inner West and Eastern Suburbs of Sydney since 2019. We currently
+support 34 participants across 9 shared living homes, and employ 61 direct
+support staff plus 4 team leaders and 2 area managers.
+
+Harbour Care was previously registered under Group 0115 (SIL). This manual
+has been updated ahead of our transition to Group 0138 and assessment
+against the new Module 5A Practice Standards, in line with mandatory SIL
+registration requirements commencing 1 July 2026.
+
+Version: 4.2
+Last reviewed: 12 March 2026
+Next review due: March 2027
+Approved by: Director of Operations
+
+-------------------------------------------------------------------
+1.1 Our Model
+-------------------------------------------------------------------
+Support workers are rostered across each home on a rotating basis. Team
+Leaders oversee 2-3 homes each and complete a monthly site visit. Homes
+are leased by Harbour Housing Solutions Pty Ltd, a related entity under
+common ownership with Harbour Care Services Pty Ltd, which also manages
+tenancy matters for participants living in our SIL homes.
+
+===================================================================
+SECTION 2: INCIDENT MANAGEMENT POLICY (v3.1, reviewed Feb 2026)
+===================================================================
+
+Harbour Care maintains a documented Incident Management Policy applicable
+across all homes.
+
+2.1 All incidents, including near misses, are recorded in the Harbour Care
+Incident Register within 24 hours of occurrence by the staff member on
+shift, or the next staff member on duty if the incident occurs overnight.
+
+2.2 Reportable incidents (as defined by the NDIS Commission, including
+serious injury, abuse, neglect, unauthorised restrictive practice, and
+death) are escalated immediately to the on-call Area Manager, who is
+responsible for lodging the report with the NDIS Commission within the
+required 24-hour (or 5 business day, as applicable) timeframe.
+
+2.3 Every incident is reviewed at the monthly Clinical & Safety Meeting.
+Root cause analysis is completed for all Category 1 and 2 incidents using
+the Harbour Care Incident Review Template.
+
+2.4 Trends across homes are tracked in the quarterly Incident Trend Report,
+which is presented to the Director of Operations and used to inform staff
+training priorities.
+
+2.5 All staff complete Incident Reporting training as part of induction and
+annually thereafter. Compliance is tracked on the Training Matrix.
+
+===================================================================
+SECTION 3: FEEDBACK AND COMPLAINTS MANAGEMENT (v2.4, reviewed Jan 2026)
+===================================================================
+
+3.1 Participants, families and staff can raise a complaint via phone, email,
+the Harbour Care website form, or in person with any staff member. Easy
+Read and translated versions of the complaints process are provided to
+each participant at intake.
+
+3.2 All complaints are logged in the Complaints Register within 24 hours
+and acknowledged with the complainant within 2 business days.
+
+3.3 The Complaints Officer investigates and aims to resolve complaints
+within 21 days, providing the complainant with a written outcome.
+
+3.4 Participants may escalate unresolved complaints to the NDIS Commission
+at any time; this right is stated explicitly in our Complaints Handbook,
+given to every participant and their support network at service
+commencement.
+
+3.5 De-identified complaint themes are reviewed quarterly by the
+Quality Committee and reported to the Board.
+
+===================================================================
+Section 4 - Risk Management
+===================================================================
+
+Harbour Care has a Risk Register maintained by the Operations team,
+last updated November 2025. The register lists organisational risks such
+as staffing shortages, WHS incidents, and financial risks, and is reviewed
+"periodically" by management.
+
+Risk assessed roles (support workers, team leaders) require a current NDIS
+Worker Screening Check and Working with Children Check before
+commencement, tracked via the HR system.
+
+Individual participant risk assessments exist for most participants,
+covering mobility and general safety. Some homes do not yet have an
+updated risk assessment reflecting current residents - Team Leaders have
+been asked to complete outstanding assessments "when time permits."
+
+There is no formal schedule for reviewing the organisational Risk Register,
+and it is unclear from current records how often WHS-specific risks
+(e.g. manual handling, lone working at night) are reassessed.
+
+===================================================================
+SECTION 5: HUMAN RESOURCES / WORKFORCE
+===================================================================
+
+5.1 Recruitment
+All new staff undergo reference checks, an NDIS Worker Screening Check,
+and complete the NDIS Worker Orientation Module before their first shift.
+
+5.2 Rostering
+Rosters are built by each home's Team Leader based on staff availability
+and historical shift patterns. Overnight shifts are frequently filled by
+casual or agency staff due to ongoing recruitment challenges in the sector.
+
+5.3 Shift Handover
+Staff are expected to "hand over verbally" at the start of each shift.
+There is currently no standard written handover form used consistently
+across all 9 homes - three homes use a shared communication book, the
+remainder rely on verbal handover only, which has been raised as a gap
+by two Team Leaders in recent supervision notes.
+
+5.4 Supervision
+Team Leaders conduct informal check-ins with support workers. Formal
+documented supervision occurs approximately every 6 months, though this
+has lapsed for several staff during 2025 due to Team Leader vacancies in
+two homes.
+
+===================================================================
+SECTION 6: MEDICATION SUPPORT
+===================================================================
+
+Support workers may assist participants with medication where required.
+Medication is stored in a locked cabinet in each home.
+
+Staff complete a general medication awareness module as part of induction.
+
+Note: individual, participant-specific medication management plans are not
+currently held for all participants - several homes rely on pharmacy
+dosette packs with verbal instructions from family/GP rather than a
+documented plan. A standardised Medication Administration Record (MAR)
+template has not yet been rolled out across all homes.
+
+===================================================================
+SECTION 7: MEALTIME SUPPORT
+===================================================================
+
+Meals are planned weekly with participant input at each home. Where a
+participant has a swallowing risk or dietary requirement identified by a
+speech pathologist or dietitian, this is noted in their individual file
+and staff are briefed verbally by the Team Leader.
+
+Staff complete basic food safety training (Food Handler certificate)
+during induction.
+
+===================================================================
+SECTION 8: PARTICIPANT MONEY AND PROPERTY
+===================================================================
+
+Where Harbour Care staff assist a participant with banking or purchases,
+this requires prior written consent from the participant or their
+nominee, recorded on the Money Handling Authorisation Form. All
+transactions are logged in the participant's Money Diary, countersigned
+by a second staff member where the amount exceeds $100.
+
+===================================================================
+SECTION 9: SAFE ENVIRONMENT
+===================================================================
+
+Each home undergoes an annual WHS inspection conducted by the Operations
+team, covering fire safety equipment, general hazards, and accessibility
+modifications. Inspection checklists are filed centrally.
+
+===================================================================
+SECTION 10: EMERGENCY MANAGEMENT
+===================================================================
+
+Harbour Care has a general Emergency Management Policy (v1.0, issued 2021,
+not yet reviewed) that provides high-level guidance for staff in the event
+of fire, medical emergency, or severe weather, applicable across the
+organisation.
+
+At this time, individual homes do not have their own site-specific
+emergency or evacuation plans reflecting the mobility, communication or
+support needs of current residents. Evacuation diagrams are displayed in
+some, but not all, homes. Staff have not undertaken a documented
+practice drill in any home in the past 12 months.
+
+===================================================================
+SECTION 11: GOVERNANCE
+===================================================================
+
+Harbour Care is governed by a Director of Operations and two Area
+Managers, who report to the Board on a quarterly basis. Team Leaders
+report operational matters to their Area Manager weekly.
+
+Formal, minuted oversight visits specific to each SIL home occur monthly
+via the Team Leader site visit, with an Area Manager attending
+approximately once per quarter. There is not yet a standing governance
+report that consolidates oversight findings across all 9 homes for
+Board-level review.
+
+===================================================================
+SECTION 12: PARTICIPANT CHOICE, TENANCY AND HOUSING
+===================================================================
+
+Participants in Harbour Care SIL homes generally lease their room or unit
+through Harbour Housing Solutions Pty Ltd, our related housing entity.
+Support and tenancy arrangements are coordinated by the same Area Manager
+for operational simplicity, and support plans are discussed at the same
+meetings as tenancy matters.
+
+House routines (meal times, visitor arrangements) are set by each home in
+consultation with residents, though these are generally proposed by staff
+in the first instance "to keep things running smoothly," with participant
+input sought afterward.
+
+===================================================================
+SECTION 13: BEHAVIOUR SUPPORT AND RESTRICTIVE PRACTICES
+===================================================================
+
+A small number of participants across our homes have behaviour support
+plans prepared by external NDIS Behaviour Support Practitioners, which are
+kept on file and referred to by staff supporting those participants.
+
+Harbour Care does not currently have an organisation-wide Restrictive
+Practices Policy setting out how restrictive practices are authorised,
+recorded, monitored and reduced across the organisation. Where a
+behaviour support plan includes a restrictive practice, staff generally
+follow the practitioner's plan directly; there is no internal process for
+tracking reportable use of restrictive practices separately from the
+general Incident Register.
+
+===================================================================
+END OF DOCUMENT
+===================================================================
+
+This manual is reviewed annually or as required by legislative change.
+Questions regarding this manual should be directed to the Director of
+Operations.

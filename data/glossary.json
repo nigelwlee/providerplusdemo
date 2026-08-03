@@ -1,0 +1,118 @@
+[
+  {
+    "term": "Participant",
+    "definition": "A person with disability who has met the access criteria and is receiving supports through the NDIS."
+  },
+  {
+    "term": "Provider",
+    "definition": "An individual or organisation that delivers NDIS supports, services or products to participants."
+  },
+  {
+    "term": "Registered provider",
+    "definition": "A provider that is registered with the NDIS Commission to deliver NDIS supports and is subject to the Practice Standards for its registration groups."
+  },
+  {
+    "term": "Registration group",
+    "definition": "A category of NDIS supports (e.g. SIL, support coordination) that determines which Practice Standards modules apply to a provider."
+  },
+  {
+    "term": "NDIS Quality and Safeguards Commission",
+    "definition": "The independent Commonwealth agency (the NDIS Commission) responsible for regulating NDIS providers, including registration, audits and complaints."
+  },
+  {
+    "term": "Practice Standards",
+    "definition": "The set of outcomes and quality indicators a registered provider must meet, covering governance, rights, safety and support delivery."
+  },
+  {
+    "term": "Quality indicator",
+    "definition": "A specific, checkable expectation that shows whether a provider is meeting a Practice Standard."
+  },
+  {
+    "term": "Certification audit",
+    "definition": "An on-site audit by an Approved Quality Auditor for providers delivering higher-risk or more complex supports, assessing practice against the full Practice Standards."
+  },
+  {
+    "term": "Verification audit",
+    "definition": "A desktop review (no site visit) used for lower-risk supports, checking documentary evidence of suitability rather than on-site practice."
+  },
+  {
+    "term": "Mid-term audit",
+    "definition": "A follow-up audit partway through a provider's 3-year certification period, checking that practice standards are still being met."
+  },
+  {
+    "term": "Renewal audit",
+    "definition": "The audit undertaken when a provider's registration is due to expire, to renew registration for a further period."
+  },
+  {
+    "term": "Close-out audit",
+    "definition": "A follow-up audit or evidence review confirming that all corrective actions from a non-conformity have been completed."
+  },
+  {
+    "term": "Non-conformity",
+    "definition": "A finding that a provider's practice does not meet a Practice Standard or quality indicator, classified as major or minor depending on severity and risk."
+  },
+  {
+    "term": "Major non-conformity",
+    "definition": "A serious gap that poses a significant risk to participant safety or rights, or reflects a systemic failure to meet a Practice Standard."
+  },
+  {
+    "term": "Minor non-conformity",
+    "definition": "A gap against a Practice Standard that is isolated or lower-risk, and does not indicate a systemic failure."
+  },
+  {
+    "term": "Corrective action plan (CAP)",
+    "definition": "A documented plan setting out how and by when a provider will fix a non-conformity identified during an audit."
+  },
+  {
+    "term": "Reportable incident",
+    "definition": "A serious incident (e.g. death, serious injury, abuse, neglect, unauthorised restrictive practice) that a registered provider must report to the NDIS Commission within set timeframes."
+  },
+  {
+    "term": "Restrictive practice",
+    "definition": "Any practice that restricts a participant's rights or freedom of movement, which must be authorised, minimised and regularly reviewed."
+  },
+  {
+    "term": "Behaviour support plan",
+    "definition": "A plan developed by a behaviour support practitioner that sets out strategies to reduce behaviours of concern, including any restrictive practices used."
+  },
+  {
+    "term": "Key personnel",
+    "definition": "The people responsible for the executive decisions or management of a provider organisation, who must meet suitability requirements set by the NDIS Commission."
+  },
+  {
+    "term": "Risk assessed role",
+    "definition": "A role involving more than incidental contact with participants, requiring an NDIS Worker Screening Check or equivalent."
+  },
+  {
+    "term": "Service agreement",
+    "definition": "An agreement between a participant and provider that sets out the supports to be delivered, costs, and terms such as cancellation and termination."
+  },
+  {
+    "term": "Choice and control",
+    "definition": "A participant's right to make their own decisions about the supports and providers they use."
+  },
+  {
+    "term": "Supported Independent Living (SIL)",
+    "definition": "Support for people who need help with daily tasks to live as independently as possible, usually in a shared living arrangement."
+  },
+  {
+    "term": "Registration Group 0138",
+    "definition": "The new SIL registration group under Module 5A, which existing Group 0115 SIL providers transition to as part of mandatory SIL registration."
+  },
+  {
+    "term": "Module 5A",
+    "definition": "The Practice Standards module specific to Supported Independent Living, covering governance, safeguarding, workforce, choice and control, and conflict of interest in shared living settings."
+  },
+  {
+    "term": "Specialist Disability Accommodation (SDA)",
+    "definition": "Purpose-built or modified accommodation for participants with extreme functional impairment or very high support needs, funded separately from SIL support."
+  },
+  {
+    "term": "Plan-managed funding",
+    "definition": "An arrangement where a registered plan manager pays providers on the participant's behalf from their NDIS plan funding."
+  },
+  {
+    "term": "Support coordinator",
+    "definition": "A provider who helps a participant understand, implement and use the supports and funding in their NDIS plan."
+  }
+]

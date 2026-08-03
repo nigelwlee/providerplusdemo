@@ -1,0 +1,105 @@
+# Audit-Ready Gap Checker
+
+A proof-of-concept AI tool that analyses an NDIS provider's policy documents against
+the NDIS Practice Standards and produces a structured, audit-style gap analysis.
+Built as a pitch demo for **Provider+**, an Australian NDIS consultancy — the
+demo scenario is a Supported Independent Living (SIL) provider transitioning to
+mandatory registration (Module 5A / Registration Group 0138).
+
+This is a one-sitting POC: no database, no auth, everything lives in memory for
+the duration of a single analysis.
+
+## Stack
+
+- Next.js 16 (App Router) + TypeScript + Tailwind CSS v4
+- Claude via [OpenRouter](https://openrouter.ai) (`openai` SDK pointed at OpenRouter's OpenAI-compatible endpoint), called server-side only
+- `pdf-parse` / `mammoth` for PDF and .docx text extraction
+- `jspdf` for client-side PDF export of the report
+
+## Setup
+
+```bash
+npm install
+cp .env.example .env.local
+# then edit .env.local and set OPENROUTER_API_KEY
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+### Environment variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `OPENROUTER_API_KEY` | Yes | API key from [openrouter.ai/keys](https://openrouter.ai/keys). Server-side only, never exposed to the client. |
+| `OPENROUTER_MODEL` | No | Overrides the model used for analysis (defaults to `deepseek/deepseek-v3.2` — cheap and strong at structured JSON; swap in `anthropic/claude-sonnet-4.6` or similar if you want higher quality at higher cost). |
+
+## Using the demo
+
+1. On the landing screen, click **"Try with sample document"** to load the
+   bundled fictional policy manual for *Harbour Care Services Pty Ltd*
+   (`data/sample-policy.txt`) — a SIL provider transitioning from Group 0115 to
+   Group 0138. This works fully offline from any upload, so it's what you should
+   use for a live demo.
+2. Core Module + Module 5A (SIL) are pre-selected, matching the sample scenario.
+   You can also upload your own PDF/.docx/.txt policy document, or paste text
+   directly.
+3. Click **Analyse document**. The app calls Claude (via OpenRouter) server-side
+   and shows a staged progress indicator while it works.
+4. Review the report: overall readiness score, executive summary, top 3 risks,
+   and a standards-by-division breakdown with evidence quotes and suggested
+   fixes. Use the filter chips to jump straight to gaps or partial findings.
+5. Click **Download report as PDF** to export a styled audit-style document.
+
+## Project structure
+
+```
+app/
+  page.tsx                 # client-side step orchestration (input → analysing → report)
+  api/parse/route.ts       # server route: extracts text from uploaded PDF/.docx
+  api/analyse/route.ts     # server route: calls Claude, returns the structured report
+components/                # UI: InputStep, ProgressStep, ReportView, StatusPill, etc.
+lib/
+  types.ts                 # shared types for the analysis pipeline
+  practiceStandards.ts     # loads/queries the Practice Standards dataset
+  prompt.ts                 # builds the system/user prompts sent to Claude
+  analyse.ts                # orchestrates condensing long docs + calling Claude + retry
+  llm.ts                      # OpenRouter (Claude) client + robust JSON extraction
+  parseDocument.ts           # PDF/.docx/.txt parsing (server-side)
+  pdfReport.ts                # client-side PDF export (jsPDF, no DOM screenshot)
+data/
+  practice-standards.json  # condensed NDIS Practice Standards dataset (Core + Module 5A in depth)
+  glossary.json             # ~25 NDIS terms, also used for in-report tooltips
+  sample-policy.txt          # bundled sample policy document for the demo
+public/sample-policy.txt    # static copy served to the client for the sample-document button
+```
+
+## Notes on the Practice Standards dataset
+
+`data/practice-standards.json` is a **condensed dataset built for demonstration
+purposes**, paraphrased from publicly available NDIS Quality and Safeguards
+Commission material — it is not a verbatim reproduction of the NDIS (Provider
+Registration and Practice Standards) Rules 2018, and Module 5A content in
+particular should be treated as a faithful paraphrase rather than an exact
+citation (it was authored from general knowledge of the new SIL Practice
+Standards, not fetched live from NDIS Commission publications). This disclaimer
+is also surfaced in the app's report footer and PDF export. Do not use this
+tool, or this dataset, for real compliance or audit advice.
+
+## Error handling
+
+- Unsupported file types, unreadable/scanned PDFs, and oversized documents
+  (>50 pages, truncated with a visible warning) are all handled with
+  human-readable messages in the upload step.
+- If the model call fails or returns malformed JSON, the API route retries
+  once with a corrective instruction before surfacing a friendly error and
+  returning the user to the input screen (nothing is lost).
+- Long documents (>~80,000 characters) are condensed with a preliminary
+  summarisation pass before the main analysis call.
+
+## Deploying to Vercel
+
+1. Push this repo to GitHub.
+2. Import it in [Vercel](https://vercel.com/new).
+3. Add the `OPENROUTER_API_KEY` environment variable in the Vercel project settings.
+4. Deploy — no other configuration is required.
