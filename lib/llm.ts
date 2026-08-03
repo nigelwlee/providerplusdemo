@@ -14,6 +14,12 @@ export function getLlmClient(): OpenAI {
     client = new OpenAI({
       apiKey: process.env.OPENROUTER_API_KEY,
       baseURL: "https://openrouter.ai/api/v1",
+      // We do our own retry-once-with-a-correction-prompt in lib/analyse.ts.
+      // The SDK's default retries (on 429/5xx) would silently stack on top of
+      // that and can multiply an already-slow call's latency.
+      maxRetries: 0,
+      // Fail fast rather than let one hung connection eat the whole request budget.
+      timeout: 45_000,
       defaultHeaders: {
         "HTTP-Referer": "https://providerplus.com.au",
         "X-Title": "Audit-Ready Gap Checker",
@@ -28,12 +34,23 @@ export async function callClaude(params: {
   user: string;
   maxTokens?: number;
   temperature?: number;
+  /** Ask OpenRouter to enforce JSON output where the model supports it (DeepSeek does). */
+  jsonMode?: boolean;
 }): Promise<string> {
   const openrouter = getLlmClient();
+  const startedAt = Date.now();
   const response = await openrouter.chat.completions.create({
     model: MODEL,
     max_tokens: params.maxTokens ?? 8192,
     temperature: params.temperature ?? 0.2,
+    ...(params.jsonMode ? { response_format: { type: "json_object" as const } } : {}),
+    // Route to the fastest available backend for this model rather than the
+    // cheapest — our bottleneck is output-token throughput, not price.
+    // Measured locally: cut the slowest batch call from ~39s to ~13s with no
+    // quality difference. Opt-out via env var if ever needed.
+    ...(process.env.OPENROUTER_SORT_THROUGHPUT !== "0"
+      ? ({ provider: { sort: "throughput" } } as Record<string, unknown>)
+      : {}),
     messages: [
       { role: "system", content: params.system },
       { role: "user", content: params.user },
@@ -43,8 +60,9 @@ export async function callClaude(params: {
   const choice = response.choices[0];
   const text = choice?.message?.content;
   if (process.env.LLM_DEBUG) {
+    const elapsedMs = Date.now() - startedAt;
     console.error(
-      `[llm debug] finish_reason=${choice?.finish_reason} textLength=${text?.length ?? 0} usage=${JSON.stringify(response.usage)}`
+      `[llm debug] elapsedMs=${elapsedMs} finish_reason=${choice?.finish_reason} textLength=${text?.length ?? 0} usage=${JSON.stringify(response.usage)}`
     );
   }
   if (!text) {

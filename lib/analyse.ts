@@ -1,13 +1,17 @@
 import { callClaude, extractJson } from "./llm";
-import { buildAnalysisPrompt, buildCondensePrompt } from "./prompt";
-import { getModulesById, flattenStandards, practiceStandards } from "./practiceStandards";
+import { buildBatchAnalysisPrompt, buildCondensePrompt, buildSynthesisPrompt } from "./prompt";
+import { getModulesById, practiceStandards } from "./practiceStandards";
 import { LONG_DOCUMENT_THRESHOLD } from "./parseDocument";
 import type {
   AnalyseRequestBody,
+  AnalysisBatch,
+  AnalysisProgressEvent,
   AnalysisReport,
   AnalysisSummary,
+  AuditPathway,
   ConfidenceLevel,
   OverallReadiness,
+  PracticeModule,
   StandardFinding,
   StandardStatus,
 } from "./types";
@@ -16,9 +20,15 @@ export class AnalysisError extends Error {}
 
 const CHUNK_SIZE = 40_000;
 
+/** How many standards each parallel batch call assesses at once. Smaller = faster/more parallel, but more total prompt tokens (the full document is sent once per batch) and more calls that could each need a retry. Tune via env after measuring actual tokens/sec with LLM_DEBUG=1. */
+const MAX_STANDARDS_PER_BATCH = Number(process.env.ANALYSIS_BATCH_SIZE) || 3;
+
 const VALID_STATUSES = new Set<StandardStatus>(["met", "partial", "gap", "not_addressed"]);
 const VALID_CONFIDENCE = new Set<ConfidenceLevel>(["high", "medium", "low"]);
 const VALID_READINESS = new Set<OverallReadiness>(["audit-ready", "minor gaps", "significant gaps"]);
+
+/** Deterministic score weighting so the score dial is reproducible run-to-run and can never disagree with the readiness verdict (both are derived here, not left to the model to keep in sync across a partial view of the results). */
+const STATUS_WEIGHT: Record<StandardStatus, number> = { met: 1, partial: 0.5, gap: 0.15, not_addressed: 0 };
 
 function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.trim().length > 0;
@@ -100,6 +110,64 @@ function validateStandard(value: unknown): StandardFinding {
   };
 }
 
+function parseStandardsResponse(raw: string, expectedIds: Set<string>): StandardFinding[] {
+  const jsonText = extractJson(raw);
+  const parsed = JSON.parse(jsonText);
+  if (typeof parsed !== "object" || parsed === null || !Array.isArray(parsed.standards)) {
+    throw new Error("Response JSON is missing a standards array.");
+  }
+  const standards: StandardFinding[] = parsed.standards.map(validateStandard);
+  const returnedIds = new Set(standards.map((s) => s.standardId));
+  const missingIds = [...expectedIds].filter((id) => !returnedIds.has(id));
+  if (missingIds.length > 0) {
+    throw new Error(`Response is missing standards: ${missingIds.join(", ")}`);
+  }
+  return standards.filter((s) => expectedIds.has(s.standardId));
+}
+
+function parseSummaryResponse(raw: string): AnalysisSummary {
+  return validateSummary(JSON.parse(extractJson(raw)));
+}
+
+/** Retries once with a corrective instruction on any parse/validation failure, mirroring the same tolerance the original single-call implementation had — just now scoped to one small batch (or the synthesis call) instead of the whole 31-standard analysis, so a retry costs seconds, not minutes. */
+async function callWithOneRetry<T>(params: {
+  system: string;
+  user: string;
+  maxTokens: number;
+  jsonMode?: boolean;
+  parse: (raw: string) => T;
+  debugLabel: string;
+}): Promise<T> {
+  const { system, user, maxTokens, jsonMode, parse, debugLabel } = params;
+
+  let raw = await callClaude({ system, user, maxTokens, jsonMode });
+  try {
+    return parse(raw);
+  } catch (err) {
+    if (process.env.LLM_DEBUG) {
+      console.error(`[analyse debug] ${debugLabel} first parse failed:`, err);
+      console.error(`[analyse debug] ${debugLabel} raw length:`, raw.length, "tail:", raw.slice(-300));
+    }
+    raw = await callClaude({
+      system,
+      user: `${user}\n\nYour previous response was not valid JSON matching the required schema, or was missing required entries. Return ONLY the JSON object — no markdown code fences, no commentary before or after.`,
+      maxTokens,
+      jsonMode,
+    });
+    try {
+      return parse(raw);
+    } catch (err2) {
+      if (process.env.LLM_DEBUG) {
+        console.error(`[analyse debug] ${debugLabel} retry parse failed:`, err2);
+        console.error(`[analyse debug] ${debugLabel} raw length:`, raw.length, "tail:", raw.slice(-300));
+      }
+      throw new AnalysisError(
+        "The analysis engine returned an unexpected or incomplete response. Please try again — if this keeps happening, try a shorter document."
+      );
+    }
+  }
+}
+
 async function condenseDocument(text: string): Promise<string> {
   const chunks: string[] = [];
   for (let i = 0; i < text.length; i += CHUNK_SIZE) {
@@ -116,33 +184,85 @@ async function condenseDocument(text: string): Promise<string> {
   return condensed.join("\n\n");
 }
 
-function parseModelResponse(
-  raw: string,
-  expectedIds: Set<string>
-): {
-  summary: AnalysisSummary;
-  standards: StandardFinding[];
-} {
-  const jsonText = extractJson(raw);
-  const parsed = JSON.parse(jsonText);
-
-  if (typeof parsed !== "object" || parsed === null || !Array.isArray(parsed.standards)) {
-    throw new Error("Response JSON is missing required fields.");
+/** Splits each division's standards into near-equal chunks of at most maxPerBatch, in dataset order (so Promise.all's result order reproduces today's report ordering when flattened). */
+function buildBatches(modules: PracticeModule[], maxPerBatch: number): AnalysisBatch[] {
+  const batches: AnalysisBatch[] = [];
+  for (const mod of modules) {
+    if (!mod.divisions) continue;
+    for (const div of mod.divisions) {
+      const standards = div.standards;
+      const total = standards.length;
+      const numChunks = Math.max(1, Math.ceil(total / maxPerBatch));
+      const baseSize = Math.floor(total / numChunks);
+      const remainder = total % numChunks;
+      let offset = 0;
+      for (let i = 0; i < numChunks; i++) {
+        const size = baseSize + (i < remainder ? 1 : 0);
+        batches.push({
+          batchId: `${mod.moduleId}-${div.divisionId}-${i + 1}`,
+          moduleId: mod.moduleId,
+          moduleName: mod.moduleName,
+          registrationGroup: mod.registrationGroup,
+          divisionName: div.divisionName,
+          standards: standards.slice(offset, offset + size),
+        });
+        offset += size;
+      }
+    }
   }
-
-  const summary = validateSummary(parsed.summary);
-  const standards: StandardFinding[] = parsed.standards.map(validateStandard);
-
-  const returnedIds = new Set(standards.map((s) => s.standardId));
-  const missingIds = [...expectedIds].filter((id) => !returnedIds.has(id));
-  if (missingIds.length > 0) {
-    throw new Error(`Response is missing standards: ${missingIds.join(", ")}`);
-  }
-
-  return { summary, standards: standards.filter((s) => expectedIds.has(s.standardId)) };
+  return batches;
 }
 
-export async function runAnalysis(body: AnalyseRequestBody): Promise<AnalysisReport> {
+/** Generous headroom over the ~290 tokens/standard observed in practice — truncation costs a whole retry, over-provisioning costs nothing. */
+function batchMaxTokens(batch: AnalysisBatch): number {
+  return Math.min(8000, 900 * batch.standards.length + 600);
+}
+
+async function runBatch(
+  batch: AnalysisBatch,
+  documentText: string,
+  pathway: AuditPathway
+): Promise<StandardFinding[]> {
+  const expectedIds = new Set(batch.standards.map((s) => s.standardId));
+  const { system, user } = buildBatchAnalysisPrompt({ documentText, batch, pathway });
+
+  const standards = await callWithOneRetry({
+    system,
+    user,
+    maxTokens: batchMaxTokens(batch),
+    jsonMode: true,
+    parse: (raw) => parseStandardsResponse(raw, expectedIds),
+    debugLabel: `batch ${batch.batchId}`,
+  });
+
+  // Overwrite with canonical dataset values rather than trusting the model's
+  // echo — free consistency, and it stops a paraphrased division name from
+  // silently splitting a section into two headings in the report UI.
+  const canonicalById = new Map(batch.standards.map((s) => [s.standardId, s]));
+  return standards.map((s) => {
+    const canonical = canonicalById.get(s.standardId);
+    return canonical
+      ? { ...s, division: batch.divisionName, standardName: canonical.standardName }
+      : s;
+  });
+}
+
+function computeScore(standards: StandardFinding[]): number {
+  if (standards.length === 0) return 0;
+  const total = standards.reduce((sum, s) => sum + STATUS_WEIGHT[s.status], 0);
+  return Math.round((total / standards.length) * 100);
+}
+
+function readinessFromScore(score: number): OverallReadiness {
+  if (score >= 85) return "audit-ready";
+  if (score >= 65) return "minor gaps";
+  return "significant gaps";
+}
+
+export async function runAnalysis(
+  body: AnalyseRequestBody,
+  onProgress?: (event: AnalysisProgressEvent) => void
+): Promise<AnalysisReport> {
   const { documentText, selectedModules, pathway } = body;
 
   if (!documentText || !documentText.trim()) {
@@ -164,50 +284,61 @@ export async function runAnalysis(body: AnalyseRequestBody): Promise<AnalysisRep
   let workingText = documentText;
   let wasCondensed = false;
   if (workingText.length > LONG_DOCUMENT_THRESHOLD) {
+    onProgress?.({ stage: "condensing" });
     workingText = await condenseDocument(workingText);
     wasCondensed = true;
   }
 
-  const { system, user } = buildAnalysisPrompt({
-    documentText: workingText,
-    modules: detailedModules,
-    pathway,
-  });
-
-  const expectedIds = new Set(flattenStandards(detailedModules).map((s) => s.standardId));
-
-  let raw = await callClaude({ system, user, maxTokens: 16000 });
-  let parsed;
-  try {
-    parsed = parseModelResponse(raw, expectedIds);
-  } catch (err) {
-    if (process.env.LLM_DEBUG) {
-      console.error("[analyse debug] first parse failed:", err);
-      console.error("[analyse debug] raw length:", raw.length, "tail:", raw.slice(-300));
-    }
-    // Retry once with an explicit correction instruction.
-    raw = await callClaude({
-      system,
-      user: `${user}\n\nYour previous response was not valid JSON matching the required schema, or was missing some of the required standards. Return ONLY the JSON object — no markdown code fences, no commentary before or after — and make sure every standardId listed in the instructions has a corresponding entry in "standards".`,
-      maxTokens: 16000,
-    });
-    try {
-      parsed = parseModelResponse(raw, expectedIds);
-    } catch (err2) {
-      if (process.env.LLM_DEBUG) {
-        console.error("[analyse debug] retry parse failed:", err2);
-        console.error("[analyse debug] raw length:", raw.length, "tail:", raw.slice(-300));
-      }
-      throw new AnalysisError(
-        "The analysis engine returned an unexpected or incomplete response. Please try again — if this keeps happening, try a shorter document."
-      );
-    }
+  const batches = buildBatches(detailedModules, MAX_STANDARDS_PER_BATCH);
+  if (process.env.LLM_DEBUG) {
+    console.error(
+      `[analyse debug] running ${batches.length} batches:`,
+      batches.map((b) => `${b.batchId}(${b.standards.length})`).join(", ")
+    );
   }
 
+  let completed = 0;
+  onProgress?.({ stage: "batches", completed: 0, total: batches.length });
+  const batchResults = await Promise.all(
+    batches.map(async (batch) => {
+      const result = await runBatch(batch, workingText, pathway);
+      completed += 1;
+      onProgress?.({ stage: "batches", completed, total: batches.length });
+      return result;
+    })
+  );
+  const merged = batchResults.flat();
+
+  onProgress?.({ stage: "synthesis" });
+  const computedScore = computeScore(merged);
+  const computedReadiness = readinessFromScore(computedScore);
+  const modulesAnalysed = detailedModules.map((m) => m.moduleName);
+
+  const { system, user } = buildSynthesisPrompt({
+    standards: merged,
+    pathway,
+    modulesAnalysed,
+    computedScore,
+    computedReadiness,
+  });
+
+  const summary = await callWithOneRetry({
+    system,
+    user,
+    maxTokens: 1024,
+    jsonMode: true,
+    parse: parseSummaryResponse,
+    debugLabel: "synthesis",
+  });
+  // Belt and braces: the deterministic values are the source of truth even if
+  // the model didn't echo them back exactly as instructed.
+  summary.score = computedScore;
+  summary.overallReadiness = computedReadiness;
+
   return {
-    summary: parsed.summary,
-    standards: parsed.standards,
-    modulesAnalysed: detailedModules.map((m) => m.moduleName),
+    summary,
+    standards: merged,
+    modulesAnalysed,
     pathway,
     generatedAt: new Date().toISOString(),
     documentCondensed: wasCondensed,

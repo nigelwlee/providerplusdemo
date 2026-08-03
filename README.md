@@ -33,6 +33,9 @@ Open [http://localhost:3000](http://localhost:3000).
 |---|---|---|
 | `OPENROUTER_API_KEY` | Yes | API key from [openrouter.ai/keys](https://openrouter.ai/keys). Server-side only, never exposed to the client. |
 | `OPENROUTER_MODEL` | No | Overrides the model used for analysis (defaults to `deepseek/deepseek-v3.2` — cheap and strong at structured JSON; swap in `anthropic/claude-sonnet-4.6` or similar if you want higher quality at higher cost). |
+| `ANALYSIS_BATCH_SIZE` | No | How many standards each parallel analysis call assesses at once (default `3`). See "How the analysis works" below. |
+| `OPENROUTER_SORT_THROUGHPUT` | No | Set to `0` to disable throughput-optimised routing (on by default). |
+| `LLM_DEBUG` | No | Set to any value to log per-call timing/token usage and batch info to the server console. |
 
 ## Using the demo
 
@@ -44,12 +47,34 @@ Open [http://localhost:3000](http://localhost:3000).
 2. Core Module + Module 5A (SIL) are pre-selected, matching the sample scenario.
    You can also upload your own PDF/.docx/.txt policy document, or paste text
    directly.
-3. Click **Analyse document**. The app calls Claude (via OpenRouter) server-side
-   and shows a staged progress indicator while it works.
+3. Click **Analyse document**. The app streams real progress from the server
+   (live "N of M sections analysed" updates) as it works — typically ~15-20
+   seconds end to end for the full Core + Module 5A demo scenario.
 4. Review the report: overall readiness score, executive summary, top 3 risks,
    and a standards-by-division breakdown with evidence quotes and suggested
    fixes. Use the filter chips to jump straight to gaps or partial findings.
 5. Click **Download report as PDF** to export a styled audit-style document.
+
+## How the analysis works
+
+Rather than one giant request asking the model to assess all ~31 standards at
+once (which took 3-4 minutes and risked timing out on Vercel), the analysis
+is split into small parallel batches:
+
+1. Each Practice Standards division is split into batches of `ANALYSIS_BATCH_SIZE`
+   standards (default 3) — e.g. Core + Module 5A becomes 12 batches.
+2. All batches run concurrently (`Promise.all`), each assessing only its own
+   handful of standards but with the full document as context. Each batch
+   validates its own response and retries once on malformed/incomplete output
+   — cheap, since a retry only costs one small batch, not the whole analysis.
+3. Once every batch completes, a final lightweight "synthesis" call writes the
+   executive summary and top 3 risks from the merged findings. The overall
+   score and readiness verdict are computed deterministically in code from the
+   met/partial/gap/not-addressed distribution (not left to the model), so
+   they're reproducible run-to-run and can never disagree with each other.
+4. Progress is streamed to the client as newline-delimited JSON
+   (`app/api/analyse/route.ts`) as each batch completes, driving the real
+   progress bar shown during analysis — not a fake timer.
 
 ## Project structure
 
@@ -62,8 +87,8 @@ components/                # UI: InputStep, ProgressStep, ReportView, StatusPill
 lib/
   types.ts                 # shared types for the analysis pipeline
   practiceStandards.ts     # loads/queries the Practice Standards dataset
-  prompt.ts                 # builds the system/user prompts sent to Claude
-  analyse.ts                # orchestrates condensing long docs + calling Claude + retry
+  prompt.ts                 # builds the batch and synthesis prompts sent to the model
+  analyse.ts                # orchestrates batching, parallel calls, retry, deterministic scoring
   llm.ts                      # OpenRouter (Claude) client + robust JSON extraction
   parseDocument.ts           # PDF/.docx/.txt parsing (server-side)
   pdfReport.ts                # client-side PDF export (jsPDF, no DOM screenshot)
@@ -91,9 +116,9 @@ tool, or this dataset, for real compliance or audit advice.
 - Unsupported file types, unreadable/scanned PDFs, and oversized documents
   (>50 pages, truncated with a visible warning) are all handled with
   human-readable messages in the upload step.
-- If the model call fails or returns malformed JSON, the API route retries
-  once with a corrective instruction before surfacing a friendly error and
-  returning the user to the input screen (nothing is lost).
+- If a batch (or the final synthesis) call fails or returns malformed/incomplete
+  JSON, it retries once with a corrective instruction before surfacing a
+  friendly error and returning the user to the input screen (nothing is lost).
 - Long documents (>~80,000 characters) are condensed with a preliminary
   summarisation pass before the main analysis call.
 

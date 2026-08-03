@@ -84,3 +84,20 @@ export interface AnalyseRequestBody {
   selectedModules: string[];
   pathway: AuditPathway;
 }
+
+/** A small group of standards (one slice of one division) assessed together in a single LLM call. */
+export interface AnalysisBatch {
+  batchId: string;
+  moduleId: string;
+  moduleName: string;
+  registrationGroup?: string;
+  divisionName: string;
+  standards: PracticeStandard[];
+}
+
+/** Progress events streamed to the client while an analysis runs. */
+export type AnalysisProgressEvent =
+  | { stage: "condensing" }
+  | { stage: "batches"; completed: number; total: number }
+  | { stage: "synthesis" };
+
