@@ -180,13 +180,25 @@ async function callWithOneRetry<T>(params: {
   }
 }
 
-/** Surfaces enough detail to tell an API-level failure (status/code from the OpenAI SDK) apart from a parse/validation failure, without dumping a full stack trace into the logs on every retry. */
+/**
+ * Redacts anything that looks like an API key/bearer token before it's ever
+ * logged or surfaced in a response. The Bearer pattern spans newlines
+ * (matches up to the next quote, not just non-whitespace) — a malformed key
+ * with an embedded newline is exactly the kind of value that needs this.
+ */
+export function redactSecrets(text: string): string {
+  return text
+    .replace(/Bearer\s+[\s\S]*?(?=")/gi, "Bearer ***redacted***")
+    .replace(/sk-[A-Za-z0-9_-]{6,}/g, "sk-***redacted***");
+}
+
+/** Surfaces enough detail to tell an API-level failure (status/code from the OpenAI SDK) apart from a parse/validation failure, without dumping a full stack trace into the logs on every retry. Secret-like substrings are always redacted first — this can end up in a client-visible debug response. */
 function describeError(err: unknown): unknown {
   if (err instanceof Error) {
     const withStatus = err as Error & { status?: number; code?: string };
     return {
       name: err.name,
-      message: err.message,
+      message: redactSecrets(err.message),
       status: withStatus.status,
       code: withStatus.code,
     };

@@ -5,14 +5,26 @@ const MODEL = process.env.OPENROUTER_MODEL || "deepseek/deepseek-v3.2";
 let client: OpenAI | null = null;
 
 export function getLlmClient(): OpenAI {
-  if (!process.env.OPENROUTER_API_KEY) {
+  const rawKey = process.env.OPENROUTER_API_KEY;
+  if (!rawKey) {
     throw new Error(
       "OPENROUTER_API_KEY is not set. Add it to your .env.local file (see .env.example)."
     );
   }
+  // A key with embedded whitespace/newlines (e.g. pasted twice into a
+  // deployment platform's env var field) fails deep inside the HTTP client
+  // with an opaque "Headers.append: invalid header value" error that gives
+  // no hint it's a config problem — catch it here with a clear message
+  // instead. This exact failure mode has happened in production.
+  const apiKey = rawKey.trim();
+  if (apiKey !== rawKey || /\s/.test(apiKey)) {
+    throw new Error(
+      "OPENROUTER_API_KEY contains unexpected whitespace or a newline — check the value in your deployment platform's environment variable settings for accidental duplication or a trailing newline."
+    );
+  }
   if (!client) {
     client = new OpenAI({
-      apiKey: process.env.OPENROUTER_API_KEY,
+      apiKey,
       baseURL: "https://openrouter.ai/api/v1",
       // We do our own retry-once-with-a-correction-prompt in lib/analyse.ts.
       // The SDK's default retries (on 429/5xx) would silently stack on top of

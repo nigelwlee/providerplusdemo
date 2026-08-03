@@ -1,4 +1,4 @@
-import { AnalysisError, runAnalysis } from "@/lib/analyse";
+import { AnalysisError, redactSecrets, runAnalysis } from "@/lib/analyse";
 import type { AnalyseRequestBody, AuditPathway } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
             message,
             status: 502,
             ...(wantsDebugDetail && error instanceof Error
-              ? { debugDetail: { name: error.name, message: error.message } }
+              ? { debugDetail: { name: error.name, message: redactSecrets(error.message) } }
               : {}),
           });
         }
